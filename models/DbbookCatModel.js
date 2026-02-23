@@ -56,6 +56,10 @@ const categorySchema = new mongoose.Schema(
       ref: "DbCategory",
       default: null,
     },
+        description: {        // ← ADD THIS
+      type: String,
+      default: "",
+    },
     image: String,
     icon: String,
   },

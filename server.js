@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 /* -------------------- CORS -------------------- */
 const allowedOrigins = [
   "https://admin.rayofaa.com",
+  "https://africamamaput.vercel.app",
   "https://www.africanmamaput.co.uk",
   "https://africanmamaput.co.uk",
   "https://admin.africanmamaput.co.uk",

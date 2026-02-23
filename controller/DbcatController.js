@@ -4,17 +4,12 @@ import DbProduct from "../models/DbproductModel.js";
 
 export const createCategory = async (req, res) => {
   try {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-
-   
-    const { name, parent } = req.body;
-const icon = req.body.icon || null;
+    const { name, parent, description } = req.body;  // ← ADD description
+    const icon = req.body.icon || null;
 
     let image = null;
-
     if (req.file) {
-      image = req.file.location || req.file.filename; // S3 gives `.location`, local gives `.filename`
+      image = req.file.location || req.file.filename;
     }
 
     const newCategory = new DbCategory({
@@ -22,6 +17,7 @@ const icon = req.body.icon || null;
       parent: parent || null,
       icon,
       image,
+      description: description || "",   // ← ADD THIS
     });
 
     const savedCategory = await newCategory.save();
