@@ -114,6 +114,23 @@ export const getProducts = async (req, res) => {
 //   }
 // };
 
+// export const getProductById = async (req, res) => {
+//   try {
+//     const product = await DbProduct.findById(req.params.id)
+//       .populate({
+//         path: "category",
+//         populate: { path: "parent", populate: { path: "parent" } },
+//       })
+//       .populate("brand", "name image description"); // ✅ include brand
+
+//     if (!product) return res.status(404).json({ message: "Not found" });
+
+//     res.json(product);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
 export const getProductById = async (req, res) => {
   try {
     const product = await DbProduct.findById(req.params.id)
@@ -121,10 +138,10 @@ export const getProductById = async (req, res) => {
         path: "category",
         populate: { path: "parent", populate: { path: "parent" } },
       })
-      .populate("brand", "name image description"); // ✅ include brand
+      // .populate("brand", "name image description")  ← REMOVE THIS
+      .lean();
 
     if (!product) return res.status(404).json({ message: "Not found" });
-
     res.json(product);
   } catch (err) {
     res.status(500).json({ message: err.message });
