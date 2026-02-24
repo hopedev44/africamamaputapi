@@ -10,7 +10,9 @@ getTrendingProducts,
 getBestSellers,
 getFeaturedProducts,
 getSpecialProducts,
-getProductBySlug
+getProductBySlug,
+getProductsByTag, 
+
 } from "../controller/DbproductController.js";
 import multer from "multer";
 import multerS3 from "multer-s3";
@@ -88,6 +90,7 @@ router.get("/products/best-sellers", getBestSellers);
 router.get("/products/trending", getTrendingProducts);
 router.get("/products/featured", getFeaturedProducts);
 router.get("/products/special", getSpecialProducts);
+router.get("/products/tag/:tag", getProductsByTag);
 
 // router.put("/product/:id", updateProduct);
 router.put(

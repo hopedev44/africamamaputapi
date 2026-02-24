@@ -352,3 +352,13 @@ export const getSpecialProducts = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+export const getProductsByTag = async (req, res) => {
+  try {
+    const products = await DbProduct.find({ 
+      tag: { $in: [req.params.tag] } 
+    }).populate("category").lean();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
