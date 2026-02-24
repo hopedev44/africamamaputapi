@@ -100,8 +100,8 @@ export const deleteCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, parent, icon } = req.body;
-    const updateData = { name, parent: parent || null, icon };
+    const { name, parent, icon, description } = req.body;
+    const updateData = { name, parent: parent || null, icon,   description: description || "",  };
 
     if (req.file) {
       updateData.image = req.file.location || req.file.filename;
