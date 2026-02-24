@@ -221,18 +221,15 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-
 export const getProductsByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
-    // Fetch all products where product.category = this categoryId
     const products = await DbProduct.find({ category: categoryId })
-      .populate("category") // include category info
-      .populate("brand", "name image") // include brand if needed
+      .populate("category")  // ← keep this
+      // .populate("brand", "name image")  ← REMOVE this line
       .lean();
 
-    // Enrich with parent and grandparent category
     const enrichedProducts = await Promise.all(
       products.map(async (product) => {
         let parentCategory = null;
@@ -245,11 +242,7 @@ export const getProductsByCategory = async (req, res) => {
           }
         }
 
-        return {
-          ...product,
-          parentCategory,
-          grandParentCategory,
-        };
+        return { ...product, parentCategory, grandParentCategory };
       })
     );
 
