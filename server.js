@@ -99,7 +99,7 @@ app.use("/api", visionRoutes);
 app.use("/api", productRoute);
 app.use("/api/db", DbproductRoute);
 
-app.use("/api/db", paymentRoute);
+app.use("/api/payment", paymentRoute);
 
 app.use("/api", catRoute);
 app.use("/api/db", DbcatRoute);
