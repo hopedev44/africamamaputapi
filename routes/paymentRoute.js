@@ -4,6 +4,8 @@ import multer from "multer";
 import multerS3 from "multer-s3";
 import { S3Client } from "@aws-sdk/client-s3";
 import { createCheckoutSession } from "../controller/PaymentController.js";
+import { getAllOrders, getOrderById } from "../controller/orderController.js";
+
 import { stripeWebhook } from "../controller/webHookController.js";
 const router = express.Router();
 
@@ -14,7 +16,8 @@ router.post(
   express.raw({ type: "application/json" }),
   stripeWebhook
 );
-
+router.get("/orders", getAllOrders);
+router.get("/orders/:id", getOrderById);
 export default router;
 
 
