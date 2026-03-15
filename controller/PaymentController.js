@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req, res) => {
   try {
-    const { cartItems, paymentMethod, billing } = req.body;
+    const { cartItems, paymentMethod, billing, userId } = req.body;
 
     const line_items = cartItems.map((item) => {
       // Use discountPrice if available, else price
@@ -33,6 +33,7 @@ export const createCheckoutSession = async (req, res) => {
       paymentMethod === "klarna" ? ["klarna"] : ["card"];
 // Save a pending order first
     const order = new Order({
+        user: userId || null,  
       email: billing?.email || "",
       phone: billing?.phone || "",
       billingAddress: {
