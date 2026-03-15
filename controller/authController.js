@@ -89,67 +89,6 @@ export const refreshToken = async (req, res) => {
   }
 };
 
-// export const login = async (req, res, next) => {
-//   const { email, password, googleToken } = req.body;
-
-//   try {
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     if (googleToken) {
-//       const ticket = await oauth2Client.verifyIdToken({
-//         idToken: googleToken,
-//         audience: process.env.GOOGLE_CLIENT_ID,
-//       });
-//       const payload = ticket.getPayload();
-
-//       if (user.googleId !== payload.sub) {
-//         return res.status(401).json({ message: "Invalid Google token" });
-//       }
-
-//       // const token = jwt.sign(
-//       //   { id: user._id, isAdmin: user.isAdmin },
-//       //   process.env.JWT_SECRET,
-//       //   { expiresIn: "1h" }
-//       // );
-//       const token = jwt.sign(
-//         { userId: user._id, isAdmin: user.isAdmin }, // Change `id` to `userId`
-//         process.env.JWT_SECRET,
-//         { expiresIn: "1h" }
-//       );
-
-//       res.status(200).json({
-//         accessToken: user.accessToken,
-//         refreshToken: user.refreshToken,
-//         token,
-//         user,
-//       });
-//     } else {
-//       const isPasswordValid = await bcrypt.compare(password, user.password);
-//       if (!isPasswordValid) {
-//         return res.status(401).json({ message: "Invalid password" });
-//       }
-
-//       const token = jwt.sign(
-//         { id: user._id, isAdmin: user.isAdmin },
-//         process.env.JWT_SECRET,
-//         { expiresIn: "1h" }
-//       );
-
-//       res.status(200).json({
-//         accessToken: user.accessToken,
-//         refreshToken: user.refreshToken,
-//         token,
-//         user,
-//       });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 export const login = async (req, res, next) => {
   const { email, password, googleToken } = req.body;

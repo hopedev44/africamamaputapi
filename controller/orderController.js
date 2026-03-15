@@ -18,3 +18,12 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getOrdersByUser = async (req, res) => {
+  try {
+    const orders = await Order.find({ email: req.params.email }).sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
