@@ -15,6 +15,7 @@ import visionRoutes from "./routes/visionRoutes.js";
 import productRoute from "./routes/productRoute.js";
 import DbproductRoute from "./routes/DbproductRoute.js";
 import brandRoute from "./routes/brandRoute.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 import DbbrandRoute from "./routes/DbbrandRoute.js";
 import paymentRoute from "./routes/paymentRoute.js";
 import catRoute from "./routes/catRoute.js";
@@ -100,7 +101,7 @@ app.use("/api", productRoute);
 app.use("/api/db", DbproductRoute);
 
 app.use("/api/payment", paymentRoute);
-
+app.use("/api/bookings", bookingRoutes);
 app.use("/api", catRoute);
 app.use("/api/db", DbcatRoute);
 
