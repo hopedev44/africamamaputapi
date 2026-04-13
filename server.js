@@ -1,12 +1,8 @@
-
-
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-// import passport from "passport";
-// import "./passport.js";
 
 import connectDB from "./config/db2.js";
 
@@ -40,29 +36,27 @@ const allowedOrigins = [
   "https://www.africanmamaput.co.uk",
   "https://africanmamaput.co.uk",
   "https://admin.africanmamaput.co.uk",
- "https://rayofaa.com",
+  "https://rayofaa.com",
   "https://www.rayofaa.com",
   "http://localhost:3000",
   "http://localhost:5173",
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // allow server-to-server, Postman, cron jobs
-      if (!origin) return callback(null, true);
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(null, false);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 /* -------------------- NO CACHE -------------------- */
 app.use((req, res, next) => {
@@ -88,7 +82,7 @@ app.use(
   })
 );
 
-
+/* -------------------- ROUTES -------------------- */
 app.use("/api", authRoute);
 app.use("/api/db", DbauthRoute);
 
@@ -106,7 +100,7 @@ app.use("/api/db", DbbrandRoute);
 
 app.use("/api/db", DbcartRoute);
 
-/* -------------------- ERROR HANDLER (IMPORTANT) -------------------- */
+/* -------------------- ERROR HANDLER -------------------- */
 app.use((err, req, res, next) => {
   console.error("🔥 SERVER ERROR:", err);
   res.status(500).json({
