@@ -88,11 +88,7 @@ app.use(
   })
 );
 
-/* -------------------- PASSPORT -------------------- */
-// app.use(passport.initialize());
-// app.use(passport.session());
 
-/* -------------------- ROUTES -------------------- */
 app.use("/api", authRoute);
 app.use("/api/db", DbauthRoute);
 
