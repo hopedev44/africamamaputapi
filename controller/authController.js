@@ -162,3 +162,11 @@ export const forgotPassword = (req, res) => {
   // You can implement email sending logic here
   res.send("Password reset link sent!");
 };
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

@@ -7,6 +7,7 @@ import {
   forgotPassword,
   getProfile,
   refreshToken,
+  getAllUsers
 } from "../controller/authController.js";
 import { protect } from "../middleware/protectUser.js";
 import User from "../models/userModel.js";
@@ -30,7 +31,7 @@ router.get(
     scope: ["profile", "email"],
   })
 );
-
+router.get("/users",  getAllUsers);
 // Google callback route - called after Google OAuth is successful
 // router.get(
 //   "/google/callback",
