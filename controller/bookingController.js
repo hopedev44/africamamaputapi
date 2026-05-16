@@ -5,7 +5,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const createBooking = async (req, res) => {
   const { name, email, phone, eventType, guests, date, location, notes } = req.body;
-
+console.log("SENDGRID_API_KEY:", process.env.SENDGRID_API_KEY ? "✅ set" : "❌ MISSING");
+console.log("FROM_EMAIL:", process.env.FROM_EMAIL || "❌ MISSING");
+console.log("ADMIN_EMAIL:", process.env.ADMIN_EMAIL || "❌ MISSING");
   if (!name || !email || !phone || !eventType || !guests || !date) {
     return res.status(400).json({ message: "Please fill in all required fields." });
   }

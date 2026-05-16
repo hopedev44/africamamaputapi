@@ -1,81 +1,141 @@
-const nodemailer = require("nodemailer");
+// import nodemailer from "nodemailer";
 
-// Create a transporter object using SMTP transport (Mailgun settings)
-const transporter = nodemailer.createTransport({
-  host: "smtp.mailgun.org", // Mailgun SMTP server
-  port: 465, // Use 587 for TLS (recommended) or 465 for SSL
-  secure: true, // Set to true if using port 465 (SSL)
-  auth: {
-    user: "brad@sandbox0b24a2abb9e640c5a9e8ce5fc2dc3df0.mailgun.org", // Mailgun SMTP username
-    pass: "Obiora100%", // Mailgun SMTP password
-  },
-});
+// // const transporter = nodemailer.createTransport({
+// //   service: "gmail",
+// //   auth: {
+// //     user: process.env.EMAIL_USER,      // your gmail e.g. hello@africanmamaput.co.uk
+// //     pass: process.env.EMAIL_PASS,      // gmail app password (not your login password)
+// //   },
+// // });
+// const transporter = nodemailer.createTransport({
+//   host: "mail.africanmamaput.co.uk",  // your hosting SMTP server
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
 
-console.log("SMTP Configuration:", {
-  host: "smtp.mailgun.org",
-  port: 465,
-  secure: true,
-  user: "brad@sandbox0b24a2abb9e640c5a9e8ce5fc2dc3df0.mailgun.org",
-});
+// export const sendOrderEmails = async (order) => {
+//   const itemsHtml = order.items.map(item => `
+//     <tr>
+//       <td style="padding:8px;border-bottom:1px solid #eee">${item.name}</td>
+//       <td style="padding:8px;border-bottom:1px solid #eee">x${item.quantity}</td>
+//       <td style="padding:8px;border-bottom:1px solid #eee">£${(item.price * item.quantity).toFixed(2)}</td>
+//     </tr>
+//   `).join("");
 
-// Function to send a welcome email
-// const sendWelcomeEmail = async (to, defaultPassword, userId) => {
-//     try {
-//         const mailOptions = {
-//             from: '"Easy Recon Enterprise" <postmaster@mail.praiseafk.tech>', // Sender address
-//             to, // Recipient email
-//             subject: 'Welcome to Easy Recon Enterprise', // Email subject
-//             text: `Hello,\n\nWelcome to Easy Recon! Your account has been created successfully.
-// Your default password is: ${defaultPassword}.
-// Please use this to log in and reset your password as soon as possible.\n\n
-// If you have any questions, feel free to reach out to us.\n\n
-// User ID: ${userId}`, // Plain text content
-//             html: `<p>Hello,</p>
-// <p>Welcome to Easy Recon! Your account has been created successfully.</p>
-// <p><strong>Your default password:</strong> ${defaultPassword}</p>
-// <p>Please use this to log in and reset your password as soon as possible.</p>
-// <p>If you have any questions, feel free to reach out to us.</p>
-// <p><strong>User ID:</strong> ${userId}</p>`, // HTML content
-//         }
+//   // ── Email to CUSTOMER ──────────────────────────────
+//   await transporter.sendMail({
+//     from: `"African Mama Put" <${process.env.EMAIL_USER}>`,
+//     to: order.email,
+//     subject: "Order Confirmed – African Mama Put 🍛",
+//     html: `
+//       <h2>Thank you, ${order.billingAddress.firstName}!</h2>
+//       <p>Your order has been confirmed. We're preparing your African feast with love!</p>
+//       <table style="width:100%;border-collapse:collapse">
+//         <thead>
+//           <tr style="background:#f5f5f5">
+//             <th style="padding:8px;text-align:left">Item</th>
+//             <th style="padding:8px;text-align:left">Qty</th>
+//             <th style="padding:8px;text-align:left">Price</th>
+//           </tr>
+//         </thead>
+//         <tbody>${itemsHtml}</tbody>
+//       </table>
+//       <h3 style="margin-top:16px">Total: £${order.total.toFixed(2)}</h3>
+//       <p>Delivering to: ${order.billingAddress.address1}, ${order.billingAddress.city}</p>
+//       <p>Need help? Email us at hello@africanmamaput.co.uk</p>
+//     `,
+//   });
 
-//         // Send the email
-//         const info = await transporter.sendMail(mailOptions)
-//         console.log('Email sent: ' + info.response)
-//         return info
-//     } catch (error) {
-//         console.error('Error sending welcome email:', error)
-//         throw new Error('Email sending failed')
-//     }
-// }
+//   // ── Email to YOU (owner) ───────────────────────────
+//   await transporter.sendMail({
+//     from: `"African Mama Put Orders" <${process.env.EMAIL_USER}>`,
+//     to: process.env.OWNER_EMAIL,       // e.g. your personal email
+//     subject: `🛒 New Order from ${order.billingAddress.firstName} ${order.billingAddress.lastName}`,
+//     html: `
+//       <h2>New Order Received!</h2>
+//       <p><strong>Customer:</strong> ${order.billingAddress.firstName} ${order.billingAddress.lastName}</p>
+//       <p><strong>Email:</strong> ${order.email}</p>
+//       <p><strong>Phone:</strong> ${order.phone}</p>
+//       <p><strong>Address:</strong> ${order.billingAddress.address1}, ${order.billingAddress.city}, ${order.billingAddress.state} ${order.billingAddress.postcode}</p>
+//       <table style="width:100%;border-collapse:collapse">
+//         <thead>
+//           <tr style="background:#f5f5f5">
+//             <th style="padding:8px;text-align:left">Item</th>
+//             <th style="padding:8px;text-align:left">Qty</th>
+//             <th style="padding:8px;text-align:left">Price</th>
+//           </tr>
+//         </thead>
+//         <tbody>${itemsHtml}</tbody>
+//       </table>
+//       <h3>Total: £${order.total.toFixed(2)}</h3>
+//     `,
+//   });
+// };
 
-const sendWelcomeEmail = async (to, defaultPassword, resetLink) => {
-  try {
-    const mailOptions = {
-      from: '"Dream Simu" <postmaster@mail.praiseafk.tech>', // Sender address
-      to, // Recipient email
-      subject: "Welcome to Dream Simu", // Email subject
-      text: `Hello,\n\nWelcome to DreamSimu! Your account has been created successfully. 
+import sgMail from "@sendgrid/mail";
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-If you have any questions, feel free to reach out to us.\n\n
-Thank you,\nDream Simu Team`, // Plain text content
-      html: `<p>Hello,</p>
-<p>Welcome to Dream Simu! Your account has been created successfully.</p>
+export const sendOrderEmails = async (order) => {
+  const itemsHtml = order.items.map(item => `
+    <tr>
+      <td style="padding:8px;border-bottom:1px solid #eee">${item.name}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee">x${item.quantity}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee">£${(item.price * item.quantity).toFixed(2)}</td>
+    </tr>
+  `).join("");
 
-<p>If you have any questions, feel free to reach out to us.</p>
-<p>Thank you,<br/>Dream Simu Team</p>`, // HTML content
-    };
+  // Email to CUSTOMER
+  await sgMail.send({
+    to: order.email,
+    from: "africanmamaput@outlook.com", // must be verified in SendGrid
+    subject: "Order Confirmed – African Mama Put 🍛",
+    html: `
+      <h2>Thank you, ${order.billingAddress.firstName}!</h2>
+      <p>Your order has been confirmed. We're preparing your African feast with love!</p>
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:#f5f5f5">
+            <th style="padding:8px;text-align:left">Item</th>
+            <th style="padding:8px;text-align:left">Qty</th>
+            <th style="padding:8px;text-align:left">Price</th>
+          </tr>
+        </thead>
+        <tbody>${itemsHtml}</tbody>
+      </table>
+      <h3>Total: £${order.total.toFixed(2)}</h3>
+      <p>Delivering to: ${order.billingAddress.address1}, ${order.billingAddress.city}</p>
+    `,
+  });
 
-    // Send the email
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent: " + info.response);
-    return info;
-  } catch (error) {
-    console.error("Error sending welcome email:", error);
-    throw new Error("Email sending failed");
-  }
-};
+  // Email to YOU (owner)
+  await sgMail.send({
+    to: "africanmamaput@outlook.com",
+    from: "africanmamaput@outlook.com",
+    subject: `🛒 New Order from ${order.billingAddress.firstName} ${order.billingAddress.lastName}`,
+    html: `
+      <h2>New Order!</h2>
+      <p><strong>Customer:</strong> ${order.billingAddress.firstName} ${order.billingAddress.lastName}</p>
+      <p><strong>Email:</strong> ${order.email}</p>
+      <p><strong>Phone:</strong> ${order.phone}</p>
+      <p><strong>Address:</strong> ${order.billingAddress.address1}, ${order.billingAddress.city}, ${order.billingAddress.state}</p>
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:#f5f5f5">
+            <th style="padding:8px;text-align:left">Item</th>
+            <th style="padding:8px;text-align:left">Qty</th>
+            <th style="padding:8px;text-align:left">Price</th>
+          </tr>
+        </thead>
+        <tbody>${itemsHtml}</tbody>
+      </table>
+      <h3>Total: £${order.total.toFixed(2)}</h3>
+    `,
+  });
 
-module.exports = {
-  sendWelcomeEmail,
+  console.log("✅ Order emails sent successfully");
 };
