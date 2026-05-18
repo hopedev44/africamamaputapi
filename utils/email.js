@@ -75,6 +75,8 @@
 //     `,
 //   });
 // };
+import dotenv from "dotenv";
+dotenv.config(); // ✅ MUST be first line before anything else
 
 import sgMail from "@sendgrid/mail";
 

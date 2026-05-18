@@ -138,48 +138,115 @@
 //   }
 // };
 
+// import Order from "../models/orderModel.js";
+// import Stripe from "stripe";
+// import { sendOrderEmails } from "../utils/email.js";
+// import dotenv from "dotenv";
+// dotenv.config(); // ✅ add this
+
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// export const stripeWebhook = async (req, res) => {
+//   const sig = req.headers["stripe-signature"];
+//   let event;
+
+//   try {
+//     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+//   } catch (err) {
+//     return res.status(400).send(`Webhook Error: ${err.message}`);
+//   }
+
+// if (event.type === "checkout.session.completed") {
+//     const session = event.data.object;
+//     const orderId = session.metadata.orderId;
+    
+//     console.log("✅ Webhook received for order:", orderId);
+
+//     try {
+//       const order = await Order.findById(orderId);
+//       if (order) {
+//         order.paymentStatus = "paid";
+//         order.status = "confirmed";
+//         order.stripePaymentIntentId = session.payment_intent;
+//         await order.save();
+
+//         console.log("📧 Sending emails to:", order.email);
+//         await sendOrderEmails(order);
+//         console.log("✅ Emails sent!");
+//       } else {
+//         console.log("❌ Order not found for ID:", orderId);
+//       }
+//     } catch (err) {
+//       console.error("❌ Webhook handler error:", err.message);
+//       console.error(err); // full error
+//     }
+//   }
+
+//   res.json({ received: true });
+// };
+
 import Order from "../models/orderModel.js";
 import Stripe from "stripe";
-import { sendOrderEmails } from "../utils/email.js";
 import dotenv from "dotenv";
-dotenv.config(); // ✅ add this
+import { sendOrderEmails } from "../utils/email.js";
+
+dotenv.config();
+
+console.log("🔑 Stripe key loaded:", process.env.STRIPE_SECRET_KEY ? "YES" : "NO");
+console.log("🔑 Webhook secret loaded:", process.env.STRIPE_WEBHOOK_SECRET ? "YES" : "NO");
+console.log("🔑 SendGrid key loaded:", process.env.SENDGRID_API_KEY ? "YES" : "NO");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const stripeWebhook = async (req, res) => {
+  console.log("📨 Webhook endpoint HIT!");
+  console.log("Headers:", req.headers["stripe-signature"] ? "Signature present" : "NO SIGNATURE");
+  
   const sig = req.headers["stripe-signature"];
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(
+      req.body, 
+      sig, 
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+    console.log("✅ Event verified:", event.type);
   } catch (err) {
+    console.error("❌ Webhook signature failed:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-if (event.type === "checkout.session.completed") {
+  if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const orderId = session.metadata.orderId;
+    const orderId = session.metadata?.orderId;
     
-    console.log("✅ Webhook received for order:", orderId);
+    console.log("✅ checkout.session.completed received!");
+    console.log("📦 Order ID from metadata:", orderId);
 
     try {
       const order = await Order.findById(orderId);
+      console.log("📋 Order found:", order ? "YES" : "NO");
+      
       if (order) {
         order.paymentStatus = "paid";
         order.status = "confirmed";
         order.stripePaymentIntentId = session.payment_intent;
         await order.save();
+        console.log("💾 Order saved!");
+        console.log("📧 Sending email to:", order.email);
 
-        console.log("📧 Sending emails to:", order.email);
         await sendOrderEmails(order);
-        console.log("✅ Emails sent!");
+        console.log("✅ Emails sent successfully!");
       } else {
-        console.log("❌ Order not found for ID:", orderId);
+        console.log("❌ No order found for ID:", orderId);
       }
     } catch (err) {
-      console.error("❌ Webhook handler error:", err.message);
-      console.error(err); // full error
+      console.error("❌ Error:", err.message);
+      console.error(err);
     }
+  } else {
+    console.log("ℹ️ Event type ignored:", event.type);
   }
 
   res.json({ received: true });
