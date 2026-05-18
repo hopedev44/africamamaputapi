@@ -141,6 +141,8 @@
 import Order from "../models/orderModel.js";
 import Stripe from "stripe";
 import { sendOrderEmails } from "../utils/email.js";
+import dotenv from "dotenv";
+dotenv.config(); // ✅ add this
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
