@@ -28,10 +28,14 @@ const orderSchema = new mongoose.Schema({
   currency: { type: String, default: "gbp" },
   status: {
     type: String,
-    enum: ["pending", "paid", "processing", "delivered", "cancelled"],
+    enum: ["pending", "confirmed", "paid", "processing", "shipped", "delivered", "cancelled"],
     default: "pending",
   },
-  paymentStatus: { type: String, default: "unpaid" },
+  paymentStatus: {
+    type: String,
+    enum: ["unpaid", "paid", "refunded", "failed"],
+    default: "unpaid",
+  },
   stripeSessionId: String,
   stripePaymentIntentId: String,
 }, { timestamps: true });
