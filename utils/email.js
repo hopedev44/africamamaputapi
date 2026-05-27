@@ -171,7 +171,7 @@ export const sendOrderEmails = async (order) => {
     console.log(`[${timestamp}] 📤 Sending CUSTOMER email to: ${order.email}`);
     const customerMsg = {
       to: order.email,
-      from: "africanmamaput@outlook.com",
+      from: "info@africanmamaput.co.uk",
       subject: "Order Confirmed – African Mama Put 🍛",
       html: `
         <h2>Thank you, ${order.billingAddress.firstName}!</h2>
@@ -203,10 +203,10 @@ export const sendOrderEmails = async (order) => {
 
   // ── Owner email ─────────────────────────────────────────────
   try {
-    console.log(`[${timestamp}] 📤 Sending OWNER email to: africanmamaput@outlook.com`);
+    console.log(`[${timestamp}] 📤 Sending OWNER email to: info@africanmamaput.co.uk`);
     const ownerMsg = {
-      to: "africanmamaput@outlook.com",
-      from: "africanmamaput@outlook.com",
+      to: "info@africanmamaput.co.uk",
+      from: "info@africanmamaput.co.uk",
       subject: `🛒 New Order from ${order.billingAddress.firstName} ${order.billingAddress.lastName}`,
       html: `
         <h2>New Order!</h2>
